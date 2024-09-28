@@ -29,30 +29,32 @@ public:
 		}
 	}
 
-	void matrixSum(Matrix A, Matrix B) {
-		for (int i = 0; i < _rows; i++) {
-			for (int j = 0; j < _columns; j++) {
-				_matrix[i][j] = A.matrixGetElement(i, j) + B.matrixGetElement(i, j);
-			}
-		}
-	}
-
-	Matrix matrixTranspose(Matrix matrix) {
+	Matrix matrixTranspose() {
 		Matrix transposedMatrix(_columns, _rows);
 		for (int i = 0; i < _rows; i++) {
 			for (int j = 0; j < _columns; j++) {
-				transposedMatrix.matrixSetElement(matrix.matrixGetElement(i, j), j, i);
+				transposedMatrix.matrixSetElement(_matrix[i][j], j, i);
 			}
 		}
 		return transposedMatrix;
 	}
 
+	Matrix matrixSum(Matrix A, Matrix B) {
+		Matrix resultMatrix(A._rows, A._columns);
+		for (int i = 0; i < A._rows; i++) {
+			for (int j = 0; j < A._columns; j++) {
+				resultMatrix.matrixSetElement(A.matrixGetElement(i, j) + B.matrixGetElement(i, j), i, j);
+			}
+		}
+		return resultMatrix;
+	}
+
 	Matrix matrixMultiply(Matrix A, Matrix B) {
 		Matrix resultMatrix(A._rows, B._columns);
-		int res = 0;
 		for (int i = 0; i < A._rows; i++) {
 			for (int j = 0; j < B._columns; j++) {
-				for (int k = 0; k < _columns; k++) {
+				int res = 0;
+				for (int k = 0; k < A._columns; k++) {
 					res += A.matrixGetElement(i, k) * B.matrixGetElement(k, j);
 				}
 				resultMatrix.matrixSetElement(res, i, j);
@@ -63,15 +65,25 @@ public:
 };
 
 int main() {
-	int rows = 2, columns = 3;
+	int rows = 3, columns = 4;
 
 	Matrix<int> A(rows, columns);
-	A.matrixSetElement(6, 1, 1);
-
 	Matrix<int> B(rows, columns);
+	
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < columns; j++) {
+			B.matrixSetElement(i + j, i, j);
+			A.matrixSetElement((j - i) * j, i, j);
+		}
+	}
+
+	A.matrixSetElement(6, 1, 1);
 	B.matrixSetElement(8, 1, 1);
 
-	Matrix<int> C(rows, columns);
-	C = C.matrixMultiply(A, B.matrixTranspose(B));
+	A.matrixPrint();
+	B.matrixPrint();
+
+	Matrix<int> C(3, 3);
+	C = C.matrixSum(A, B);
 	C.matrixPrint();
 }
