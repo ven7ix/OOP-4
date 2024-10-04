@@ -17,6 +17,7 @@ public:
 		return _matrix[i];
 	}
 
+	//можно писать без const
 	const std::vector<Type>& operator [] (int i) const {
 		return _matrix[i];
 	}
@@ -68,9 +69,9 @@ public:
 	}
 
 	void matrixPrint() {
-		for (int i = 0; i < _rows; i++) {
-			for (int j = 0; j < _columns; j++) {
-				std::cout << _matrix[i][j] << " ";
+		for (std::vector<Type> row : _matrix) {
+			for (Type element : row) {
+				std::cout << element << " ";
 			}
 			std::cout << "\n";
 		}
@@ -111,4 +112,12 @@ int main() {
 	B = B.matrixTranspose();
 	C = A * B;
 	C.matrixPrint();
+
+	Matrix<double> A1(rows, columns);
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < columns; j++) {
+			A1[i][j] = double((j + i) * j * 21) / 10;
+		}
+	}
+	A1.matrixPrint();
 }
